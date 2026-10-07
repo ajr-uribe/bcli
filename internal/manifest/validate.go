@@ -10,6 +10,15 @@ type Issue struct {
 	Message string
 }
 
+// ValidateFile reads the manifest at path and validates it.
+func ValidateFile(path string) ([]Issue, error) {
+	m, err := Read(path)
+	if err != nil {
+		return nil, err
+	}
+	return Validate(m), nil
+}
+
 func (i Issue) String() string {
 	return fmt.Sprintf("- [%s]: %s", i.Field, i.Message)
 }

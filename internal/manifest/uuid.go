@@ -1,30 +1,62 @@
 package manifest
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/google/uuid"
 )
 
+// UUIDChange describes a single UUID that was generated.
+type UUIDChange struct {
+	Field string
+	UUID  string
+}
+
 // EnsureUUIDs checks header and all modules in the manifest.
 // It generates and assigns a new UUID v4 if and only if a field is empty.
 // Returns the number of UUIDs generated.
 func EnsureUUIDs(m *Manifest) int {
-	generated := 0
+	return len(FillMissingUUIDs(m))
+}
 
-	// Check header.uuid
+// FillMissingUUIDs generates UUIDs for every empty field and returns what changed.
+func FillMissingUUIDs(m *Manifest) []UUIDChange {
+	changes := []UUIDChange{}
+
 	if strings.TrimSpace(m.Header.UUID) == "" {
 		m.Header.UUID = uuid.New().String()
-		generated++
+		changes = append(changes, UUIDChange{Field: "header.uuid", UUID: m.Header.UUID})
 	}
 
-	// Check each module's UUID
 	for i := range m.Modules {
 		if strings.TrimSpace(m.Modules[i].UUID) == "" {
 			m.Modules[i].UUID = uuid.New().String()
-			generated++
+			changes = append(changes, UUIDChange{
+				Field: fmt.Sprintf("modules[%d].uuid", i),
+				UUID:  m.Modules[i].UUID,
+			})
 		}
 	}
 
-	return generated
+	return changes
+}
+
+// FillUUIDsInFile reads the manifest at path, fills missing UUIDs, and writes
+// it back unless dryRun is true. It reports what was (or would be) added.
+func FillUUIDsInFile(path string, dryRun bool) ([]UUIDChange, error) {
+	m, err := Read(path)
+	if err != nil {
+		return nil, fmt.Errorf("error reading manifest: %w", err)
+	}
+
+	changes := FillMissingUUIDs(m)
+	if len(changes) == 0 || dryRun {
+		return changes, nil
+	}
+
+	if err := Write(path, m); err != nil {
+		return nil, fmt.Errorf("error updating manifest: %w", err)
+	}
+	return changes, nil
 }

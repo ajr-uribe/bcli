@@ -23,32 +23,25 @@ var uuidCmd = &cobra.Command{
 			}
 			cleanPath := filepath.Clean(strings.TrimSpace(filePath))
 
-			// 1. Read manifest
-			m, err := manifest.Read(cleanPath)
+			dryRun, _ := cmd.Flags().GetBool("dry-run")
+			changes, err := manifest.FillUUIDsInFile(cleanPath, dryRun)
 			if err != nil {
-				return fmt.Errorf("error reading manifest: %w", err)
+				return err
 			}
 
-			// 2. Insert missing UUIDs
-			addedCount := manifest.EnsureUUIDs(m)
-
-			if addedCount == 0 {
+			if len(changes) == 0 {
 				fmt.Println("No missing UUIDs found. All header and module UUIDs are already set.")
 				return nil
 			}
 
-			dryRun, _ := cmd.Flags().GetBool("dry-run")
 			if dryRun {
-				fmt.Printf("[dry-run] Would insert %d missing UUID(s) into '%s'\n", addedCount, cleanPath)
-				return nil
+				fmt.Printf("[dry-run] Would insert %d missing UUID(s) into '%s':\n", len(changes), cleanPath)
+			} else {
+				fmt.Printf("Successfully inserted %d missing UUID(s) into '%s':\n", len(changes), cleanPath)
 			}
-
-			// 3. Save changes
-			if err := manifest.Write(cleanPath, m); err != nil {
-				return fmt.Errorf("error updating manifest: %w", err)
+			for _, c := range changes {
+				fmt.Printf("  %s = %s\n", c.Field, c.UUID)
 			}
-
-			fmt.Printf("Successfully inserted %d missing UUID(s) into '%s'\n", addedCount, cleanPath)
 			return nil
 		}
 

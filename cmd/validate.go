@@ -13,12 +13,10 @@ var validateCmd = &cobra.Command{
 	Short: "Validate a manifest.json against Bedrock add-on rules",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		m, err := manifest.Read(args[0])
+		issues, err := manifest.ValidateFile(args[0])
 		if err != nil {
 			return err
 		}
-
-		issues := manifest.Validate(m)
 		if len(issues) == 0 {
 			fmt.Println("OK: no issues found.")
 			return nil
