@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"bcli/manifest"
+	"bcli/internal/manifest"
 
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
