@@ -1,0 +1,6 @@
+{
+  "name": "@ajr-uribe/bcli",
+  "scripts": {
+    "build": "go build -o dist/bcli"
+  }
+}
