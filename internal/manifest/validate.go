@@ -7,6 +7,15 @@ import (
 	"github.com/google/uuid"
 )
 
+// ---------------------------------------------------------------------------
+// Business validation
+// ---------------------------------------------------------------------------
+// Validate checks the RULES of a manifest: required fields, UUID formats,
+// allowed module combinations, dependency declarations, and script API
+// requirements. (JSON shape checking happens earlier, in types.go, during
+// parsing.) It returns every problem found as a list of Issues, so callers
+// can report them all at once instead of failing on the first one.
+
 const requiredScriptLanguage = "javascript"
 
 type Issue struct {

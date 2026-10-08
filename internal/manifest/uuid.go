@@ -7,6 +7,14 @@ import (
 	"github.com/google/uuid"
 )
 
+// ---------------------------------------------------------------------------
+// UUID filling
+// ---------------------------------------------------------------------------
+// These helpers find empty header/module UUID fields and fill them with
+// fresh UUID v4 values. They power the `uuid --insert` command: file-level
+// orchestration lives in FillUUIDsInFile, while the pure in-memory logic
+// in FillMissingUUIDs is easy to unit test.
+
 // UUIDChange describes a single UUID that was generated.
 type UUIDChange struct {
 	Field string
