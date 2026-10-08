@@ -157,6 +157,73 @@ func TestValidateDependencyXOR(t *testing.T) {
 }
 
 // ---------------------------------------------------------
+// Non-interactive construction
+// ---------------------------------------------------------
+
+func TestNewRejectsEmptyName(t *testing.T) {
+	if _, err := New(NewOptions{Kind: KindBehavior}); err == nil {
+		t.Fatal("expected error for empty name")
+	}
+}
+
+func TestNewRejectsBadKind(t *testing.T) {
+	if _, err := New(NewOptions{Name: "pack", Kind: "other"}); err == nil {
+		t.Fatal("expected error for invalid kind")
+	}
+}
+
+func TestNewScriptRequiresDeps(t *testing.T) {
+	if _, err := New(NewOptions{Name: "pack", Kind: KindScript}); err == nil {
+		t.Fatal("expected error for script kind without dependencies")
+	}
+}
+
+func TestNewNormalizesScriptDepNames(t *testing.T) {
+	m, err := New(NewOptions{
+		Name:       "pack",
+		Kind:       KindScript,
+		ScriptDeps: []ScriptDependency{{Name: "server", Version: "2.0.0"}},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(m.Dependencies) != 1 || m.Dependencies[0].ModuleName != "@minecraft/server" {
+		t.Fatalf("expected normalized module name, got %v", m.Dependencies)
+	}
+	if issues := Validate(m); len(issues) != 0 {
+		t.Fatalf("expected valid manifest, got %v", issues)
+	}
+}
+
+func TestLinkManifestsPairs(t *testing.T) {
+	bp, err := New(NewOptions{Name: "pack", Kind: KindBehavior})
+	if err != nil {
+		t.Fatal(err)
+	}
+	rp, err := New(NewOptions{Name: "pack", Kind: KindResource})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := LinkManifests(bp, rp); err != nil {
+		t.Fatal(err)
+	}
+
+	if len(bp.Dependencies) != 1 || bp.Dependencies[0].UUID != rp.Header.UUID {
+		t.Errorf("expected BP to depend on RP header UUID, got %v", bp.Dependencies)
+	}
+	if len(rp.Dependencies) != 1 || rp.Dependencies[0].UUID != bp.Header.UUID {
+		t.Errorf("expected RP to depend on BP header UUID, got %v", rp.Dependencies)
+	}
+	if issues := Validate(bp); len(issues) != 0 {
+		t.Errorf("expected valid linked BP manifest, got %v", issues)
+	}
+	if issues := Validate(rp); len(issues) != 0 {
+		t.Errorf("expected valid linked RP manifest, got %v", issues)
+	}
+}
+
+// ---------------------------------------------------------
 // Disk I/O round-trips
 // ---------------------------------------------------------
 

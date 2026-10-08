@@ -12,6 +12,8 @@
 //	            UUID formats, module combinations, dependency rules, ...).
 //	uuid.go     - filling in missing UUIDs, reporting what changed.
 //	generate.go - interactive manifest creation (terminal prompts).
+//	new.go      - non-interactive manifest construction from explicit
+//	            options, plus linking behavior/resource manifests.
 package manifest
 
 import (

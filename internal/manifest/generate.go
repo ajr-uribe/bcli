@@ -43,40 +43,49 @@ type packInfo struct {
 	Authors     string
 }
 
-// InteractiveGenerate launches the interactive terminal prompts and builds a Manifest.
+// InteractiveGenerate launches the interactive terminal prompts, then
+// builds the Manifest through New so prompted and programmatic creation
+// share one construction and validation flow.
 func InteractiveGenerate() (*Manifest, error) {
 	info, err := promptPackInfo()
 	if err != nil {
 		return nil, err
 	}
 
-	modules, err := buildModules(info.Type)
-	if err != nil {
-		return nil, err
+	var kind PackKind
+	switch info.Type {
+	case packTypeBP:
+		kind = KindBehavior
+	case packTypeRP:
+		kind = KindResource
+	case packTypeScript:
+		kind = KindScript
+	default:
+		return nil, fmt.Errorf("invalid pack type: %q", info.Type)
 	}
 
-	var dependencies []Dependency
-
+	var scriptDeps []ScriptDependency
 	if info.Type == packTypeScript {
-		dependencies, err = promptScriptDependencies()
+		dependencies, err := promptScriptDependencies()
 		if err != nil {
 			return nil, err
 		}
+		for _, dep := range dependencies {
+			version, _ := dep.Version.(string)
+			scriptDeps = append(scriptDeps, ScriptDependency{
+				Name:    dep.ModuleName,
+				Version: version,
+			})
+		}
 	}
 
-	return &Manifest{
-		FormatVersion: FormatVersion2,
-		Header: Header{
-			Name:             info.Name,
-			Description:      info.Description,
-			UUID:             uuid.New().String(),
-			Version:          defaultVersion,
-			MinEngineVersion: defaultMinEngineVersion,
-		},
-		Modules:      modules,
-		Dependencies: dependencies,
-		Metadata:     buildMetadata(info.Authors),
-	}, nil
+	return New(NewOptions{
+		Name:        info.Name,
+		Description: info.Description,
+		Kind:        kind,
+		Authors:     parseCommaList(info.Authors),
+		ScriptDeps:  scriptDeps,
+	})
 }
 
 // promptPackInfo asks for the main pack information.
