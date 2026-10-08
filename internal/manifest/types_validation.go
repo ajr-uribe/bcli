@@ -68,3 +68,17 @@ func (d *Dependency) UnmarshalJSON(data []byte) error {
 	*d = Dependency(aux)
 	return nil
 }
+
+func (pt *ProductType) UnmarshalJSON(b []byte) error {
+	var val string
+	if err := json.Unmarshal(b, &val); err != nil {
+		return fmt.Errorf("product_type must be a string")
+	}
+
+	if val != string(ProductTypeAddon) {
+		return fmt.Errorf("product_type '%s' is invalid (allowed: 'addon')", val)
+	}
+
+	*pt = ProductType(val)
+	return nil
+}
