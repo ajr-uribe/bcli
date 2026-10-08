@@ -8,8 +8,8 @@ import (
 func validManifest() *Manifest {
 	return &Manifest{
 		FormatVersion: FormatVersion2,
-		Header:        Header{Name: "pack", UUID: "uuid-1"},
-		Modules:       []Module{{Type: ModuleTypeData, UUID: "uuid-2"}},
+		Header:        Header{Name: "pack", UUID: "458f6e14-40fd-4109-99aa-2ed058eff1fd", MinEngineVersion: EngineVersion{1, 26, 0}},
+		Modules:       []Module{{Type: ModuleTypeData, UUID: "efa63950-602a-4c10-af00-37ec0be8f346"}},
 	}
 }
 
@@ -30,7 +30,7 @@ func TestValidateRequiresModules(t *testing.T) {
 
 func TestValidateRejectsDataAndResourcesTogether(t *testing.T) {
 	m := validManifest()
-	m.Modules = append(m.Modules, Module{Type: ModuleTypeResources, UUID: "uuid-3"})
+	m.Modules = append(m.Modules, Module{Type: ModuleTypeResources, UUID: "43e45286-3df6-4b27-b6e3-e64796a5bdab"})
 	found := false
 	for _, issue := range Validate(m) {
 		if strings.Contains(issue.Message, "both 'data' and 'resources'") {

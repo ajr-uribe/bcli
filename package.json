@@ -2,6 +2,6 @@
   "name": "@ajr-uribe/bcli",
   "scripts": {
     "build": "go build -o dist/bcli",
-    "test:manifest": "dist/bcli validate testdata/manifest.json"
+    "test:manifest": "dist/bcli manifest validate testdata/manifest.json"
   }
 }

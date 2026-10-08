@@ -16,14 +16,15 @@ func TestWritePreservesUnknownFields(t *testing.T) {
   "header": {
     "name": "pack",
     "description": "desc",
-    "uuid": "uuid-1",
+    "uuid": "458f6e14-40fd-4109-99aa-2ed058eff1fd",
     "version": [1, 0, 0],
+    "min_engine_version": [1, 26, 0],
     "custom_header_field": "keep-me"
   },
   "modules": [
     {
       "type": "data",
-      "uuid": "uuid-2",
+      "uuid": "efa63950-602a-4c10-af00-37ec0be8f346",
       "version": [1, 0, 0],
       "capabilities": ["chemistry"]
     }

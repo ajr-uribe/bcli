@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var validateCmd = &cobra.Command{
+var manifestValidateCmd = &cobra.Command{
 	Use:   "validate <manifest.json>",
 	Short: "Validate a manifest.json against Bedrock add-on rules",
 	Args:  cobra.ExactArgs(1),
@@ -31,5 +31,5 @@ var validateCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(validateCmd)
+	manifestCmd.AddCommand(manifestValidateCmd)
 }

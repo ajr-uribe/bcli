@@ -4,6 +4,7 @@ type (
 	ModuleType    string
 	FormatVersion int
 	Version       [3]int
+	EngineVersion [3]int
 	ProductType   string
 )
 
@@ -20,11 +21,11 @@ const (
 )
 
 type Header struct {
-	Name             string  `json:"name"`
-	Description      string  `json:"description"`
-	UUID             string  `json:"uuid"`
-	Version          Version `json:"version"`
-	MinEngineVersion Version `json:"min_engine_version"`
+	Name             string        `json:"name"`
+	Description      string        `json:"description"`
+	UUID             string        `json:"uuid"`
+	Version          Version       `json:"version"`
+	MinEngineVersion EngineVersion `json:"min_engine_version"`
 }
 
 type Module struct {
@@ -32,6 +33,8 @@ type Module struct {
 	Description string     `json:"description,omitempty"`
 	UUID        string     `json:"uuid"`
 	Version     Version    `json:"version"`
+	Language    string     `json:"language,omitempty"`
+	Entry       string     `json:"entry,omitempty"`
 }
 
 type Dependency struct {
@@ -53,7 +56,7 @@ type Manifest struct {
 	Header        Header        `json:"header"`
 	Modules       []Module      `json:"modules"`
 	Dependencies  []Dependency  `json:"dependencies,omitempty"`
-	Metadata      Metadata      `json:"metadata,omitempty"`
+	Metadata      *Metadata     `json:"metadata,omitempty"`
 	// raw holds the original decoded document so unknown fields can be
 	// preserved when writing the manifest back to disk.
 	raw map[string]any
