@@ -21,9 +21,9 @@ import (
 	"strings"
 )
 
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // Custom scalar types
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // These wrap plain strings/ints so invalid values are rejected as soon as
 // the JSON is parsed (in UnmarshalJSON below), instead of slipping through
 // to validation later.
@@ -53,9 +53,9 @@ const (
 	ProductTypeAddon ProductType = "addon"
 )
 
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // Document structs
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // These mirror the manifest.json structure field by field. The `json` tags
 // control how each field maps to JSON keys; `omitempty` means the key is
 // skipped when the value is empty (only used for truly optional fields).
@@ -102,9 +102,9 @@ type Manifest struct {
 	raw map[string]any
 }
 
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // JSON parsing rules (UnmarshalJSON)
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // These run automatically during json.Unmarshal. They reject malformed
 // values early with a friendly error, before business validation runs.
 // Rule of thumb: parsing checks the SHAPE ("is this value well-formed?"),

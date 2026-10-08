@@ -7,9 +7,9 @@ import (
 	"github.com/google/uuid"
 )
 
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // Business validation
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // Validate checks the RULES of a manifest: required fields, UUID formats,
 // allowed module combinations, dependency declarations, and script API
 // requirements. (JSON shape checking happens earlier, in types.go, during

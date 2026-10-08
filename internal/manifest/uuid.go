@@ -7,9 +7,9 @@ import (
 	"github.com/google/uuid"
 )
 
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // UUID filling
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // These helpers find empty header/module UUID fields and fill them with
 // fresh UUID v4 values. They power the `uuid --insert` command: file-level
 // orchestration lives in FillUUIDsInFile, while the pure in-memory logic

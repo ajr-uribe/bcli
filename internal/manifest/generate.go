@@ -9,9 +9,9 @@ import (
 	"github.com/google/uuid"
 )
 
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // Interactive generation
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // This file builds a brand-new Manifest by asking the user questions in the
 // terminal (pack name, type, authors, script dependencies, ...). It is the
 // logic behind `bcli manifest generate`; the cobra command in cmd/ is just

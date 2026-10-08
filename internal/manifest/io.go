@@ -6,9 +6,9 @@ import (
 	"os"
 )
 
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // Disk I/O
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // Read and Write are the only two functions that touch the filesystem.
 // Everything else in this package works on the in-memory *Manifest.
 //
@@ -75,9 +75,9 @@ func Write(path string, m *Manifest) error {
 	return nil
 }
 
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // Merge helpers (unexported)
-// ---------------------------------------------------------------------------
+// ---------------------------------------------------------
 // These overlay the typed struct values onto the raw original document.
 // Keys that only exist in the raw document (unknown fields) are kept.
 // Nested objects and arrays of objects are merged recursively so extra keys
